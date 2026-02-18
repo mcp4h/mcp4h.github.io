@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<title>MCP For Humans</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com"/>
+		<link
+			rel="preconnect"
+			href="https://fonts.gstatic.com"
+			crossorigin/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap"
+			rel="stylesheet"/>
+		<link rel="stylesheet" href="styles.css"/>
+	</head>
+	<body>
+		<header class="site-header">
+			<div class="brand">
+				<div class="brand-mark">mcp4h</div>
+				<div class="brand-sub">MCP For Humans</div>
+			</div>
+			<nav class="site-nav">
+				<a href="#ui">UI mediation</a>
+				<a href="#permissions">Permissions</a>
+				<a href="https://github.com/mcp4h">Github</a>
+			</nav>
+		</header>
+		<main class="content">
+			<section class="hero">
+				<div class="hero-copy">
+					<p class="eyebrow">MCP For Humans.</p>
+					<h1>MCP needs a human touch</h1>
+					<p class="lede">
+						I've created a few projects that try to enrich the MCP protocol 
+            with a specific focus on enabling users to understand better what exactly the MCP server and LLM are doing.
+			This both in an interactive session but also offline automated runs.
+					</p>
+					<p class="lede">
+						The work stays MCP-compatible, opt-in, and does not change normal
+            operations or inflate LLM token use.
+					</p>
+					<div class="hero-actions">
+						<a class="btn" href="#ui">Start with UI</a>
+						<a class="btn ghost" href="https://github.com/mcp4h">Check out the code</a>
+					</div>
+				</div>
+				<div class="hero-card">
+					<div class="card-title">At a glance</div>
+					<ul class="card-list">
+						<li>Enrichment of tool calls</li>
+						<li>Access to encapsulated data</li>
+						<li>Standardized dry-run</li>
+					</ul>
+				</div>
+			</section>
+			<section id="ui" class="section reveal longform">
+				<div class="section-title">
+					<h2>UI mediation</h2>
+					<p>The goal is to improve human understanding of the domain the MCP server controls.</p>
+				</div>
+				<div class="longform-content">
+					<div class="longform-block">
+						<h2>Preview vs review</h2>
+						<p>
+							One challenge in MCP is informing the user of the impact a particular tool action has.
+				Tool input and output tell a story, but it is rarely enough for the human reviewer.
+						</p>
+						<p>
+							Tools need structured inputs and outputs to work. The user
+              needs context to understand the impact. That is a different role in the
+              exchange. Where the LLM might say "replace this line with this other line", the user might need to see the broader context of that line to understand what it means.
+						</p>
+						<p>
+							In offline mode, the user may want to review actions that have been taken at a later date.
+				In an interactive session, the user may need to make a decision on whether or not to allow a certain tool call to proceed.
+				The only difference between these two settings is the timing. Decision making is done before the call, review is done after the call.
+						</p>
+						<p>
+							I've added a file server where
+							<code>edit_file</code>
+							will always generate a visually clear changeset and a structured diff.
+			  These can be saved for review later in an offline session but in an interactive session the agent can set
+							<code>_meta.preview</code>
+							to
+							<code>true</code>
+							when calling the tool.
+			  The tool will generate the exact same output but not actually apply the change.
+			  The artifacts it generates can then be used to inform the user of what
+							<i>would</i>
+							happen were he to allow it. Once allowed, the tool call can be rerun without the preview parameter.
+						</p>
+					</div>
+					<div class="ui-gallery">
+						<figure class="ui-shot">
+							<button
+								type="button"
+								class="ui-shot-button"
+								data-lightbox-src="assets/images/mcp-invoke-preview.png"
+								data-lightbox-alt="Preview of an MCP invoke with a dry-run summary."
+								data-lightbox-caption="MCP invoke preview mode.">
+								<img
+									src="assets/images/mcp-invoke-preview.png"
+									alt="Preview of an MCP invoke with a dry-run summary."/>
+							</button>
+							<figcaption>MCP invoke preview mode.</figcaption>
+						</figure>
+						<figure class="ui-shot">
+							<button
+								type="button"
+								class="ui-shot-button"
+								data-lightbox-src="assets/images/mcp-invoke-preview-ui1.png"
+								data-lightbox-alt="Unified diff preview of an MCP invoke."
+								data-lightbox-caption="Unified diff.">
+								<img
+									src="assets/images/mcp-invoke-preview-ui1.png"
+									alt="Unified diff preview of an MCP invoke."/>
+							</button>
+							<figcaption>Unified diff.</figcaption>
+						</figure>
+						<figure class="ui-shot">
+							<button
+								type="button"
+								class="ui-shot-button"
+								data-lightbox-src="assets/images/mcp-invoke-preview-ui2.png"
+								data-lightbox-alt="Full screen unified diff."
+								data-lightbox-caption="Fullscreen unified diff.">
+								<img
+									src="assets/images/mcp-invoke-preview-ui2.png"
+									alt="Full screen unified diff."/>
+							</button>
+							<figcaption>Fullscreen unified diff.</figcaption>
+						</figure>
+						<figure class="ui-shot">
+							<button
+								type="button"
+								class="ui-shot-button"
+								data-lightbox-src="assets/images/mcp-invoke-preview-ui3.png"
+								data-lightbox-alt="Side by side diff view of the change."
+								data-lightbox-caption="Side-by-side diff.">
+								<img
+									src="assets/images/mcp-invoke-preview-ui3.png"
+									alt="Side by side diff view of the change."/>
+							</button>
+							<figcaption>Side-by-side diff.</figcaption>
+						</figure>
+						<figure class="ui-shot">
+							<button
+								type="button"
+								class="ui-shot-button"
+								data-lightbox-src="assets/images/mcp-invoke-preview-ui4.png"
+								data-lightbox-alt="Dedicated diff output"
+								data-lightbox-caption="Dedicated diff output">
+								<img
+									src="assets/images/mcp-invoke-preview-ui4.png"
+									alt="Dedicated diff output"/>
+							</button>
+							<figcaption>Dedicated diff output</figcaption>
+						</figure>
+						<figure class="ui-shot">
+							<button
+								type="button"
+								class="ui-shot-button"
+								data-lightbox-src="assets/images/mcp-resources.png"
+								data-lightbox-alt="Combination of static and dynamic resources."
+								data-lightbox-caption="Combination of static and dynamic resources.">
+								<img
+									src="assets/images/mcp-resources.png"
+									alt="Combination of static and dynamic resources."/>
+							</button>
+							<figcaption>Combination of static and dynamic resources.</figcaption>
+						</figure>
+					</div>
+					<div class="longform-block">
+						<h3>How the UI layer is delivered</h3>
+						<p>
+							Inspired by MCP apps, there is an MCP bridge: a native web
+              component that renders HTML inside a sandboxed iframe. It exposes
+              a standard set of CSS variables that can be configured on the
+							<code>mcp-view</code>
+							, allowing the remote UI to blend into the host
+              application.
+						</p>
+						<p>
+							For the file server, each
+							<code>edit-file</code>
+							tool call generates a temporary dynamic
+              resource. The link is currently added to the
+							<code>content</code>
+							array. A standardized diff is generated and
+              served from resources as well, alongside any static JS/CSS assets.
+						</p>
+					</div>
+					<div class="longform-block">
+						<h2>Context beyond a single tool call</h2>
+						<p>
+							MCP servers are frequently black boxes. They manage datasets the
+              user cannot easily browse, such as a remote file repository or a
+              containerized instance. The user is not guaranteed access to the
+              broader environment the server operates in.
+						</p>
+						<p>
+							That makes UI mediation about more than one specific tool or tool call.
+			  Sometimes the user needs more information regarding the state of the data.
+			  Maybe he needs to check some other files before committing to a certain path.
+						</p>
+					</div>
+					<div class="ui-gallery">
+						<figure class="ui-shot">
+							<button
+								type="button"
+								class="ui-shot-button"
+								data-lightbox-src="assets/images/mcp-application.png"
+								data-lightbox-alt="MCP application view."
+								data-lightbox-caption="MCP application view.">
+								<img
+									src="assets/images/mcp-application.png"
+									alt="MCP application view."/>
+							</button>
+							<figcaption>MCP application view.</figcaption>
+						</figure>
+						<figure class="ui-shot">
+							<button
+								type="button"
+								class="ui-shot-button"
+								data-lightbox-src="assets/images/mcp-application-annotation.png"
+								data-lightbox-alt="MCP application with annotations."
+								data-lightbox-caption="Annotated MCP application view.">
+								<img
+									src="assets/images/mcp-application-annotation.png"
+									alt="MCP application with annotations."/>
+							</button>
+							<figcaption>Annotated MCP application view.</figcaption>
+						</figure>
+					</div>
+					<div class="longform-block">
+						<h3>UI layer details</h3>
+						<p>
+							The server scans resources annotated with type
+							<code>application</code>
+							and generates a button for each one. When
+              clicked, the same MCP bridge loads the HTML UI inside the
+              sandboxed frame.
+						</p>
+						<p>
+							The HTML loads its CSS/JavaScript over the bridge and can call the
+              same tools as the LLM to construct an application. Those tool
+              calls also flow through the MCP bridge.
+						</p>
+						<p>
+							The file browser itself is a Vue 3 app. The standard build is
+              about 75kb raw, and an initial Vue Vapor build drops it to 57kb
+              with more room to reduce. The goal is to ship lightweight
+              applications.
+						</p>
+						<p>
+							The host application that embeds the bridge must register a
+              resolver for resources and tool calls to make the flow work.
+						</p>
+					</div>
+					<div
+						class="lightbox"
+						id="lightbox"
+						aria-hidden="true">
+						<button
+							type="button"
+							class="lightbox-backdrop"
+							data-lightbox-close
+							aria-label="Close preview"></button>
+						<div class="lightbox-content">
+							<button
+								type="button"
+								class="lightbox-close"
+								data-lightbox-close
+								aria-label="Close">Close</button>
+							<img class="lightbox-image" alt=""/>
+							<p class="lightbox-caption"></p>
+						</div>
+					</div>
+					<div class="project-cards">
+						<article class="project-card">
+							<p class="project-label">mcp-fs</p>
+							<h3>A file server that demonstrates the model</h3>
+							<p>
+								I implemented a rust-based file MCP server that showcases the UI extensions
+                end-to-end. It includes diff views for every file edit and a broader file browser application.
+							</p>
+						</article>
+						<article class="project-card">
+							<p class="project-label">mcp-ui</p>
+							<h3>MCP Bridge</h3>
+							<p>
+								A MCP-Apps inspired native web component to securely render the HTML artifacts
+ 				while allowing resolving of additional resources and tool calls.
+ 				It also has a starting point for standardizing css across tools.
+							</p>
+						</article>
+						<article class="project-card">
+							<p class="project-label">mcp-test</p>
+							<h3>Testing the UI surface</h3>
+							<p>
+								A tool to test MCP servers. The tool itself
+				  is not unique, but it supports the UI extensions and makes it
+				  easier to test the human-facing layer in isolation.
+							</p>
+						</article>
+					</div>
+				</div>
+			</section>
+			<section id="permissions" class="section reveal longform">
+				<div class="section-title">
+					<h2>Permissions</h2>
+					<p>Designing scopes that scale across tools, sessions, and UI flows.</p>
+				</div>
+				<div class="longform-content">
+					<div class="longform-block">
+						<h3>Scopes that scale across tools</h3>
+						<p>
+							The goal is to let users tune permissions per session or per agent
+              without drowning them in hundreds of tool-specific toggles. A flat
+              permission list does not scale when you have dozens of MCP tools.
+						</p>
+						<p>
+							A hierarchical scope layout solves this. Across all tools, the
+              root capabilities should collapse into a small, clear set like
+							<code>read</code>
+							,
+							<code>write</code>
+							, and
+							<code>execute</code>
+							.
+              That lets users quickly tune an agent at a broad level before
+              deciding whether they need finer control.
+						</p>
+					</div>
+					<div class="longform-block">
+						<h3>Granularity when you actually need it</h3>
+						<p>
+							Scopes can carry detail, e.g.
+							<code>write:file:/path/to</code>
+							. This
+              keeps the base policy simple while still allowing fine-grained
+              control when a specific tool needs it. It also lets you express
+              cases like
+							<code>write:file</code>
+							allowed but
+							<code>write:database</code>
+							denied, or vice-versa.
+						</p>
+					</div>
+					<div class="longform-block">
+						<h3>Dynamic permission requests</h3>
+						<p>
+							Example: a file server starts with configured roots. If the LLM
+              tries to write outside those roots, the server returns an error by
+              default, but also includes
+							<code>requested_scopes</code>
+							in
+							<code>_meta</code>
+							such as
+							<code>write:file:/new/path</code>
+							.
+						</p>
+						<p>
+							The agent UI can ask the user to allow or deny the request. If the
+              user approves, the call is replayed with
+							<code>granted_scopes</code>
+							.
+              The grant can be stored for the session or only for that request.
+						</p>
+					</div>
+					<div class="longform-block">
+						<h3>Permission flow lives in the agent layer</h3>
+						<p>
+							Permission checks and prompts are not handled by the MCP server and
+              do not pass through the LLM. The agent framework mediates approval
+              and decides when to persist grants per session or per agent, based
+              on what the workflow needs.
+						</p>
+					</div>
+				</div>
+			</section>
+		</main>
+		<footer class="site-footer">
+			<div>mcp4h</div>
+			<div>MCP For Humans</div>
+		</footer>
+		<script>
+			(function () {
+				var lightbox = document.getElementById("lightbox");
+				if (!lightbox) {
+					return;
+				}
+				var image = lightbox.querySelector(".lightbox-image");
+				var caption = lightbox.querySelector(".lightbox-caption");
+				var lastFocus = null;
+				function openLightbox(trigger) {
+					var src = trigger.getAttribute("data-lightbox-src");
+					if (!src) {
+						return;
+					}
+					image.src = src;
+					image.alt = trigger.getAttribute("data-lightbox-alt") || "";
+					caption.textContent = trigger.getAttribute("data-lightbox-caption") || "";
+					lightbox.classList.add("is-open");
+					lightbox.setAttribute("aria-hidden", "false");
+					lastFocus = trigger;
+				}
+				function closeLightbox() {
+					if (!lightbox.classList.contains("is-open")) {
+						return;
+					}
+					lightbox.classList.remove("is-open");
+					lightbox.setAttribute("aria-hidden", "true");
+					image.src = "";
+					image.alt = "";
+					caption.textContent = "";
+					if (lastFocus && typeof lastFocus.focus === "function") {
+						lastFocus.focus();
+					}
+				}
+				document.addEventListener(
+					"click",
+					function (event) {
+						var trigger = event.target.closest("[data-lightbox-src]");
+						if (trigger) {
+							event.preventDefault();
+							openLightbox(trigger);
+							return;
+						}
+						var closeTarget = event.target.closest("[data-lightbox-close]");
+						if (closeTarget) {
+							event.preventDefault();
+							closeLightbox();
+						}
+					}
+				);
+				window.addEventListener(
+					"keydown",
+					function (event) {
+						if (event.key === "Escape") {
+							closeLightbox();
+						}
+					}
+				);
+			})();
+		</script>
+	</body>
+</html>
