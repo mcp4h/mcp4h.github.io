@@ -290,10 +290,12 @@
 					</div>
 				</div>
 			</section>
-			<section id="permissions" class="section reveal longform" style="display:none">
+			<section id="permissions" class="section reveal longform">
 				<div class="section-title">
 					<h2>Permissions</h2>
-					<p>Designing scopes that scale across tools, sessions, and UI flows.</p>
+					<p>I wanted to use a set of permissions that is easy for the user to manage at a high level while 
+						also allowing the user to dig deeper and configure it in detail when needed.
+					</p>
 				</div>
 				<div class="longform-content">
 					<div class="longform-block">
@@ -306,22 +308,19 @@
 						<p>
 							A hierarchical scope layout solves this. Across all tools, the
               root capabilities should collapse into a small, clear set like
-							<code>read</code>
-							,
-							<code>write</code>
-							, and
-							<code>execute</code>
-							.
+							<code>read</code>, <code>write</code> and <code>execute</code>.
               That lets users quickly tune an agent at a broad level before
               deciding whether they need finer control.
+			</p>
+			<p>
+			  For example you might easily set up an agent that has <code>read:*</code> but disallowed <code>write:*</code> for a high level distinction.
 						</p>
 					</div>
 					<div class="longform-block">
 						<h3>Granularity when you actually need it</h3>
 						<p>
 							Scopes can carry detail, e.g.
-							<code>write:file:/path/to</code>
-							. This
+							<code>write:file:/path/to</code>. This
               keeps the base policy simple while still allowing fine-grained
               control when a specific tool needs it. It also lets you express
               cases like
