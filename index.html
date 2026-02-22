@@ -73,6 +73,9 @@
 							For the user however, looking just at the input might not be enough. He may want to see the broader context of that line to understands what the replacement means.
 						</p>
 						<p>
+							At the same time we don't want to add unnecessary tools to the MCP server that the LLM might get confused by. Instead we want to generate side effects that are aimed solely at the user and invisible to the LLM.
+						</p>
+						<p>
 							In the file server I added to this project (the <code>mcp-fs</code> project), the <code>edit_file</code> tool call
 							will always generate a visual diff (both unified and side-by-side) for human consumption and a structured diff for automated processing.
 							If the tool call is simply allowed to pass, it can be stored for later viewing, however the server also supports a <code>_meta.preview</code> boolean toggle.
@@ -178,7 +181,7 @@
 						<p>
 							For the file server, each <code>edit-file</code>
 							tool call generates a temporary dynamic resource. 
-							If you <i>can</i> inform the user based solely on input/output, static resources are also possible.
+							If you <i>can</i> inform the user based solely on input/output or existing tools, static resources are also possible.
 							The link is currently added to the <code>content</code> array.
 						</p>
 					</div>
