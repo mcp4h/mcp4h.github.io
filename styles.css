@@ -502,6 +502,16 @@ a {
 		flex-wrap: wrap;
 		gap: 10px;
 	}
+	.ui-gallery,
+	.gallery {
+		grid-template-columns: 1fr;
+	}
+	.ui-shot img,
+	.shot img {
+		height: auto;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+	}
 	.hero-actions {
 		flex-direction: column;
 		align-items: flex-start;
