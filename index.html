@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<title>MCP For Humans</title>
+		<title>MCP Proposals</title>
 		<link rel="preconnect" href="https://fonts.googleapis.com"/>
 		<link
 			rel="preconnect"
@@ -18,10 +18,11 @@
 		<header class="site-header">
 			<div class="brand">
 				<div class="brand-mark">mcp4h</div>
-				<div class="brand-sub">MCP For Humans</div>
+				<div class="brand-sub">MCP Proposals</div>
 			</div>
 			<nav class="site-nav">
-				<a href="#ui">UI mediation</a>
+				<a href="#ui">UI</a>
+				<a href="#configuration">Configuration</a>
 				<a href="#permissions">Permissions</a>
 				<a href="https://github.com/mcp4h">Github</a>
 			</nav>
@@ -29,7 +30,7 @@
 		<main class="content">
 			<section class="hero">
 				<div class="hero-copy">
-					<p class="eyebrow">MCP For Humans.</p>
+					<p class="eyebrow">MCP Proposals.</p>
 					<h1>Informing the user</h1>
 					<p class="lede">
 						MCP servers can encapsulate data that the user might not have easy access to.
@@ -48,9 +49,11 @@
 				<div class="hero-card">
 					<div class="card-title">At a glance</div>
 					<ul class="card-list">
-						<li>Enrichment of tool calls</li>
-						<li>Access to encapsulated data</li>
+						<li>Human visualization of tool calls</li>
+						<li>Human access to encapsulated data</li>
 						<li>Standardized dry-run</li>
+						<li>Runtime policies</li>
+						<li>Scalable permissions</li>
 					</ul>
 				</div>
 			</section>
@@ -293,6 +296,143 @@
 					</div>
 				</div>
 			</section>
+			<section id="configuration" class="section reveal longform">
+				<div class="section-title">
+					<h2>Configuration and policies</h2>
+					<p>Building on SEP-1596, I have introduced a way to dynamically send the actual configuration in the initialize exchange. After that, runtime policies can be used for each tool call to create restricted sandboxes on the fly.</p>
+				</div>
+				<div class="longform-content">
+					<div class="longform-block">
+						<h3>Schema-first configuration</h3>
+						<p>
+							Servers can publish their requirements during the <code>initialize</code> phase (SEP-1596) via <code>capabilities.configSchema</code>.
+							This allows middleware to dynamically generate configuration UIs for the user. 
+							In the provided <code>mcp-fs</code> server, you can also retrieve this schema directly via the <code>--print-config-schema</code> CLI flag.
+						</p>
+						<p>
+							I've added an extension where the middleware can then take that user-provided configuration and send it in the initialize phase via <code>capabilities.experimental.configuration</code>.
+							While the included <code>mcp-fs</code> server supports traditional environment variables and CLI flags, these initialization-time configurations take precedence, allowing for more flexible, stateful management..
+						</p>
+					</div>
+					<div class="ui-gallery">
+						<figure class="ui-shot">
+							<button
+								type="button"
+								class="ui-shot-button"
+								data-lightbox-src="assets/images/mcp-server-configuration.png"
+								data-lightbox-alt="Server configuration overview in mcp-test."
+								data-lightbox-caption="Server configuration overview.">
+								<img
+									src="assets/images/mcp-server-configuration.png"
+									alt="Server configuration overview in mcp-test."/>
+							</button>
+							<figcaption>Server configuration overview.</figcaption>
+						</figure>
+						<figure class="ui-shot">
+							<button
+								type="button"
+								class="ui-shot-button"
+								data-lightbox-src="assets/images/mcp-server-schema.png"
+								data-lightbox-alt="Configuration schema view for an MCP server."
+								data-lightbox-caption="Configuration schema view.">
+								<img
+									src="assets/images/mcp-server-schema.png"
+									alt="Configuration schema view for an MCP server."/>
+							</button>
+							<figcaption>Configuration schema view.</figcaption>
+						</figure>
+						<figure class="ui-shot">
+							<button
+								type="button"
+								class="ui-shot-button"
+								data-lightbox-src="assets/images/mcp-server-json-configuration.png"
+								data-lightbox-alt="JSON configuration input in mcp-test."
+								data-lightbox-caption="JSON configuration input.">
+								<img
+									src="assets/images/mcp-server-json-configuration.png"
+									alt="JSON configuration input in mcp-test."/>
+							</button>
+							<figcaption>JSON configuration input.</figcaption>
+						</figure>
+					</div>
+					<div class="longform-block">
+						<h3>Runtime policies</h3>
+						<p>
+							Once a server is active, <b>Runtime Policies</b> allow for granular, per-call restrictions.
+							This is vital when scoping an MCP server to a narrow domain for a specific task, or when an LLM needs to delegate a sub-task to a worker with limited exposure.
+							The <code>mcp-fs</code> tool implements this by accepting a <code>_meta.policy</code> fragment in the call. These fragments act as a restrictive overlay on the primary configuration.
+						</p>
+						<p>
+							<b>Crucial Security Rule:</b> A policy can only <b>restrict</b> configuration, never expand it. 
+							For example, a policy can narrow a file root to a specific subfolder or add stricter "deny" globs, but it cannot grant access to a new root. Any attempt to expand permissions results in a JSON-RPC error.
+						</p>
+						<p>
+							To manage this, I've introduced two attributes for configuration fields:
+							<ul>
+								<li><b>scope</b>: this is <code>configuration</code>, <code>policy</code> or <code>any</code> (default). Defines if a setting is set at startup, at runtime, or both.</li>
+								<li><b>audience</b>: this is <code>human</code>, <code>llm</code> or <code>any</code> (default). Determines if a policy change can be requested by the LLM itself or must be configured by a human.</li>
+							</ul>
+						</p>
+						<p>
+							The included <code>mcp-fs</code> and <code>mcp-test</code> tools provide full reference implementations of these concepts.
+						</p>
+					</div>
+					<div class="ui-gallery">
+						<figure class="ui-shot">
+							<button
+								type="button"
+								class="ui-shot-button"
+								data-lightbox-src="assets/images/mcp-no-policy.png"
+								data-lightbox-alt="Tool invocation without a policy."
+								data-lightbox-caption="Tool invocation without a policy.">
+								<img
+									src="assets/images/mcp-no-policy.png"
+									alt="Tool invocation without a policy."/>
+							</button>
+							<figcaption>Tool invocation without a policy.</figcaption>
+						</figure>
+						<figure class="ui-shot">
+							<button
+								type="button"
+								class="ui-shot-button"
+								data-lightbox-src="assets/images/mcp-with-policy.png"
+								data-lightbox-alt="Tool invocation with a policy applied."
+								data-lightbox-caption="Tool invocation with a policy applied.">
+								<img
+									src="assets/images/mcp-with-policy.png"
+									alt="Tool invocation with a policy applied."/>
+							</button>
+							<figcaption>Tool invocation with a policy applied.</figcaption>
+						</figure>
+						<figure class="ui-shot">
+							<button
+								type="button"
+								class="ui-shot-button"
+								data-lightbox-src="assets/images/mcp-with-invalid-policy.png"
+								data-lightbox-alt="Policy validation error shown to the agent."
+								data-lightbox-caption="Policy validation error.">
+								<img
+									src="assets/images/mcp-with-invalid-policy.png"
+									alt="Policy validation error shown to the agent."/>
+							</button>
+							<figcaption>Policy validation error.</figcaption>
+						</figure>
+						<figure class="ui-shot">
+							<button
+								type="button"
+								class="ui-shot-button"
+								data-lightbox-src="assets/images/mcp-immutable.png"
+								data-lightbox-alt="Policy enforcing immutability for write operations."
+								data-lightbox-caption="Policy enforcing immutability.">
+								<img
+									src="assets/images/mcp-immutable.png"
+									alt="Policy enforcing immutability for write operations."/>
+							</button>
+							<figcaption>Policy enforcing immutability.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</section>
 			<section id="permissions" class="section reveal longform">
 				<div class="section-title">
 					<h2>Permissions</h2>
@@ -368,7 +508,7 @@
 		</main>
 		<footer class="site-footer">
 			<div>mcp4h</div>
-			<div>MCP For Humans</div>
+			<div>MCP Proposals</div>
 		</footer>
 		<script>
 			(function () {
