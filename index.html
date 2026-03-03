@@ -170,11 +170,43 @@
 									src="assets/images/mcp-resources.png"
 									alt="Combination of static and dynamic resources."/>
 							</button>
-							<figcaption>Combination of static and dynamic resources.</figcaption>
-						</figure>
-					</div>
-					<div class="longform-block">
-						<h3>How the UI layer is delivered</h3>
+						<figcaption>Combination of static and dynamic resources.</figcaption>
+					</figure>
+				</div>
+				<div class="longform-block">
+					<h3>Intent templates</h3>
+					<p>
+						Tool descriptions tend to be written for the LLM. To inform the user before a
+						tool is invoked, tools can optionally publish <code>annotations.intentTemplate</code>:
+						a short, human-focused template filled with the call input.
+					</p>
+					<p>
+						The template uses a lightweight EBNF-style format. Placeholders use braces
+						(<code>{path}</code>), optional segments use brackets (<code>[in {root}]</code>), and
+						dotted keys allow field access (<code>{paths.path}</code>). Missing values drop the
+						optional segment they appear in. For example:
+						<code>Search for {pattern} [in {root}] [with glob {glob}]</code>.
+					</p>
+					<p>
+						An extended expansion mode treats bracketed groups that contain array placeholders
+						as repeatable. The group is rendered once per array element and placeholders are
+						resolved by index. Scalars repeat across each entry. If multiple array roots appear,
+						each root group is expanded independently. Missing entries are treated as null so
+						optional subgroups drop. If all arrays in the group are empty, the group is omitted.
+						Whitespace is normalized by collapsing multiple spaces after optional groups drop.
+					</p>
+					<p>
+						Example:
+						<code>Read files [{paths.path} [from line {paths.start_line}] [limit {paths.limit}]]</code>
+					</p>
+					<ul>
+						<li>Discouraged: mixing different array roots in the same group.</li>
+						<li>Discouraged: placeholders that resolve to non-primitive values.</li>
+						<li>Discouraged: required keys without brackets (missing keys stay as <code>{key}</code>).</li>
+					</ul>
+				</div>
+				<div class="longform-block">
+					<h3>How the UI layer is delivered</h3>
 						<p>
 							Inspired by MCP apps, there is an MCP bridge (available in <code>mcp-ui</code>): a native web
               				component that renders HTML inside a sandboxed iframe. It exposes
